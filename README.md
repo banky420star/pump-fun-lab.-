@@ -2,11 +2,13 @@
 
 **Paper-only strategy research, reproducible execution tests, and read-only wallet analysis.**
 
-This public repository contains synthetic demonstrations. No profitable live strategy has been established. The code has no transaction-signing or order-submission path.
+This public repository contains synthetic demonstrations and an optional bounded live market collector. No profitable live strategy has been established. The code has no transaction-signing or order-submission path.
+
+**Live connection:** Open **Actions → Live market sample → Run workflow** for a free discovery check. See [connect to live market data](docs/live-market.md) for results, metered trade-data setup and the limits of paper testing.
 
 ## Quick start
 
-Python **3.11 or newer**, with no third-party runtime dependencies. Run from the repository root:
+Python **3.11 or newer**. Offline research has no third-party runtime dependencies. The optional live collector uses the pinned transport in `requirements-live.txt`. Run from the repository root:
 
 ```bash
 PYTHONPATH=src python3 -m unittest discover -s tests -v
@@ -15,7 +17,7 @@ PYTHONPATH=src python3 -m pumpfun_lab demo --output output/demo
 
 Open `output/demo/report.html`. The accompanying `report.md` is readable text; `report.json` retains simulated fills, costs, rejected actions, unresolved holdings, and source labels.
 
-The demo combines a fabricated profile with 50 artificial per-coin summaries and a 24-observation artificial market. All demo identities, monetary figures and dates are fictional. The public GitHub workflow uses only these fixtures.
+The demo combines a fabricated profile with 50 artificial per-coin summaries and a 24-observation artificial market. All demo identities, monetary figures and dates are fictional. The **Paper research checks** workflow uses these fixtures; the separate live workflow labels actual market observations explicitly.
 
 ## Components
 
@@ -24,6 +26,7 @@ The demo combines a fabricated profile with 50 artificial per-coin summaries and
 | Snapshot reconciliation | Exact decimal arithmetic, mint-based identity, selected-winner concentration and unexplained aggregate differences | Coin summaries are not a complete transaction ledger |
 | Paper replay | Compare momentum, creator filtering and pre-graduation entries under common costs and delays | A price-observation model cannot establish executable live returns |
 | Read-only wallet importer | Preserve raw RPC evidence, native/token changes, fees, unknown ownership and incomplete history | At most 100 signatures and 20 transactions; no automatic trade or PnL inference |
+| Live market sample | Bounded creation/migration capture; explicitly authorized metered trade observations with paper replay | Third-party processed data and indicative prices; no funded execution or proven returns |
 | Automated checks | Exercise causality, accounting, missing data, validation and escaping | Engineering tests do not establish a trading edge |
 
 ## Paper strategies
@@ -94,7 +97,9 @@ See [wallet data and completeness](docs/wallet-data.md). Raw reports belong in l
 
 **Paper research checks** runs on push, pull request and manual invocation. It executes tests, generates the synthetic demo, adds a job summary and retains downloadable JSON/Markdown/HTML for seven days. It uses read-only repository permissions and a five-minute timeout.
 
-Official Actions are pinned to v7 commit hashes verified on 2026-10-27. The workflow uses Python 3.12 and needs no pip installation. No recurring live session or paid data/model service is enabled. Inspect the repository's **Actions** tab for the actual hosted conclusion and logs.
+**Live market sample** is a separate, bounded collector. Collector changes on main trigger a 90-second free discovery check. Manual runs can request up to 900 seconds. Metered trade data requires both the `PUMPPORTAL_API_KEY` secret and explicit acceptance of charges for that run. It never submits trades. The reports retain sanitized market events for seven days; no personal wallet profile is queried.
+
+Official Actions are pinned to v7 commit hashes verified on 2026-10-27. Both workflows use Python 3.12; only the live workflow installs the optional transport. No recurring live session or automatic paid service is enabled. Inspect the repository's **Actions** tab for actual hosted conclusions and logs. GitHub Actions is not persistent bot hosting.
 
 ## Evaluation path
 

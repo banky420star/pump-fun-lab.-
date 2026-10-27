@@ -3,6 +3,7 @@
 import argparse
 from datetime import datetime, timezone
 import json
+import os
 from pathlib import Path
 import sys
 
@@ -78,6 +79,16 @@ def parser() -> argparse.ArgumentParser:
     command.add_argument("--max-signatures", type=int, default=100)
     command.add_argument("--max-transactions", type=int, default=20)
     command.add_argument("--output", type=Path, default=Path("output/wallet"))
+    command = sub.add_parser("live", help="Collect a bounded live market sample; simulate only")
+    command.add_argument("--mode", choices=("discovery", "trades"), default="discovery")
+    command.add_argument("--duration-seconds", type=int, default=90)
+    command.add_argument("--max-messages", type=int, default=1000)
+    command.add_argument("--max-tokens", type=int, default=10)
+    command.add_argument("--accept-data-charges", action="store_true",
+                         help="Explicitly permit metered trade-data subscriptions")
+    command.add_argument("--config", type=Path, default=Path("config/paper.json"))
+    command.add_argument("--strategy", choices=STRATEGIES, default="momentum")
+    command.add_argument("--output", type=Path, default=Path("output/live"))
     return p
 
 
@@ -98,6 +109,25 @@ def main(argv=None) -> int:
             report = {"schema_version": 1, "mode": "paper", "snapshot": snapshot, "replays": results}
             markdown = snapshot_md + "\n\n---\n\n" + replay_markdown(results)
             title = "Pump.fun Lab — initial research report"
+        elif args.command == "live":
+            from .engine import _configuration
+            from .live import capture_market
+            from .live_report import build_live_report
+            # Validate every modeling parameter before opening any metered feed.
+            config = _configuration(_load_json(args.config))
+            args.output.mkdir(parents=True, exist_ok=True)
+            capture = capture_market(
+                mode=args.mode, duration_seconds=args.duration_seconds,
+                max_messages=args.max_messages, max_tokens=args.max_tokens,
+                api_key=os.environ.get("PUMPPORTAL_API_KEY") if args.mode == "trades" else None,
+                accept_data_charges=args.accept_data_charges,
+            )
+            report, markdown = build_live_report(capture, config, args.strategy)
+            title = "Pump.fun Lab — live market sample"
+            args.output.mkdir(parents=True, exist_ok=True)
+            with (args.output / "events.jsonl").open("w", encoding="utf-8") as stream:
+                for observation in capture["observations"]:
+                    stream.write(json.dumps(observation, allow_nan=False) + "\n")
         else:
             from .wallet import fetch_wallet_history
             report = fetch_wallet_history(args.address,
@@ -120,6 +150,19 @@ def main(argv=None) -> int:
         if args.command == "wallet" and report.get("errors"):
             print("History contains retrieval errors; see completeness and errors in the report.", file=sys.stderr)
             return 1
+        if args.command == "live":
+            capture = report["capture"]
+            counts = capture["counts"]
+            print(f"Live sample: connected={capture['connected']}; "
+                  f"market_data_received={capture['market_data_received']}; "
+                  f"new_tokens={counts.get('new_token', 0)}; "
+                  f"migrations={counts.get('migration', 0)}; "
+                  f"price_observations={len(capture['observations'])}; "
+                  f"end_reason={capture['end_reason']}")
+            if (capture.get("errors") or not capture["market_data_received"]
+                    or report["evaluation"]["errors"]):
+                print("Live capture is incomplete or lacks market-event evidence; see report.", file=sys.stderr)
+                return 1
         return 0
     except (OSError, ValueError, TypeError, KeyError) as error:
         print(f"error: {error}", file=sys.stderr)

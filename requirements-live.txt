@@ -1,0 +1,2 @@
+# Optional live-feed transport; offline tools remain standard-library only.
+websockets==16.0
