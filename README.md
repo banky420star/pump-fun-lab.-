@@ -6,6 +6,8 @@ This public repository contains synthetic demonstrations and an optional bounded
 
 **Live connection:** Open **Actions → Live market sample → Run workflow** for a free discovery check. See [connect to live market data](docs/live-market.md) for results, metered trade-data setup and the limits of paper testing.
 
+**Run on your Mac:** Download the project, then open **Start-Pumpfun-Lab.command**. It prepares a local environment and offers free discovery or a bounded paper test with private API-key entry. See [Mac startup instructions](docs/run-on-your-mac.md).
+
 ## Quick start
 
 Python **3.11 or newer**. Offline research has no third-party runtime dependencies. The optional live collector uses the pinned transport in `requirements-live.txt`. Run from the repository root:
