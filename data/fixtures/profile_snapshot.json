@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "source": "synthetic_demo",
+  "source_description": "Fabricated demonstration data. Every identifier, name, date and amount is fictional and is not an on-chain observation.",
+  "independently_verified": false,
+  "dates_are_fictional": true,
+  "session_date": "2000-02-01",
+  "observed_at": null,
+  "username": "Synthetic demo",
+  "wallet_address": "SYNTHETIC_WALLET_NOT_ON_CHAIN",
+  "realized_profit_usd_reported": "1000.00",
+  "unrealized_profit_usd_reported": "-25.00",
+  "headline_profit_usd_reported": "975.50",
+  "portfolio_value_usd_reported": "150.00",
+  "buy_volume_usd_reported": "5000.00",
+  "headline_return_pct_reported": "12.5",
+  "coins_created_reported": 12
+}

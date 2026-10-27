@@ -1,0 +1,18 @@
+{
+  "initial_balance_sol": 10,
+  "position_sol": 0.05,
+  "max_positions": 3,
+  "protocol_fee_bps": 125,
+  "slippage_bps": 100,
+  "network_fee_sol": 0.00001,
+  "latency_ms": 1000,
+  "max_quote_age_ms": 5000,
+  "stop_loss_bps": 1500,
+  "take_profit_bps": 2500,
+  "max_hold_ms": 60000,
+  "momentum_min_return_bps": 500,
+  "creator_min_prior_launches": 1,
+  "creator_min_success_rate": 0.5,
+  "pre_graduation_min_progress": 0.8,
+  "pre_graduation_max_progress": 0.95
+}

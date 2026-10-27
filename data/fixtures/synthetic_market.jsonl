@@ -1,0 +1,24 @@
+{"ts_ms":0,"mint":"SYNTH_WIN","price_sol":0.000001,"liquidity_sol":1,"creator_prior_launches":3,"creator_prior_success_rate":0.7,"progress":0.80,"sellable":true,"source":"synthetic","note":"ARTIFICIAL SOFTWARE FIXTURE. Not market data or evidence of profitability."}
+{"ts_ms":0,"mint":"SYNTH_FAILED_EXIT","price_sol":0.000001,"liquidity_sol":1,"creator_prior_launches":4,"creator_prior_success_rate":0.6,"progress":0.80,"sellable":true,"source":"synthetic"}
+{"ts_ms":0,"mint":"SYNTH_STOP_LOSS","price_sol":0.000001,"liquidity_sol":1,"creator_prior_launches":0,"creator_prior_success_rate":0,"progress":0.60,"sellable":true,"source":"synthetic"}
+{"ts_ms":1000,"mint":"SYNTH_WIN","price_sol":0.00000104,"liquidity_sol":1,"creator_prior_launches":3,"creator_prior_success_rate":0.7,"progress":0.82,"sellable":true,"source":"synthetic"}
+{"ts_ms":1000,"mint":"SYNTH_FAILED_EXIT","price_sol":0.00000104,"liquidity_sol":1,"creator_prior_launches":4,"creator_prior_success_rate":0.6,"progress":0.83,"sellable":true,"source":"synthetic"}
+{"ts_ms":1000,"mint":"SYNTH_STOP_LOSS","price_sol":0.00000104,"liquidity_sol":1,"creator_prior_launches":0,"creator_prior_success_rate":0,"progress":0.65,"sellable":true,"source":"synthetic"}
+{"ts_ms":2000,"mint":"SYNTH_WIN","price_sol":0.00000110,"liquidity_sol":1,"creator_prior_launches":3,"creator_prior_success_rate":0.7,"progress":0.85,"sellable":true,"source":"synthetic"}
+{"ts_ms":2000,"mint":"SYNTH_FAILED_EXIT","price_sol":0.00000110,"liquidity_sol":1,"creator_prior_launches":4,"creator_prior_success_rate":0.6,"progress":0.86,"sellable":true,"source":"synthetic"}
+{"ts_ms":2000,"mint":"SYNTH_STOP_LOSS","price_sol":0.00000110,"liquidity_sol":1,"creator_prior_launches":0,"creator_prior_success_rate":0,"progress":0.70,"sellable":true,"source":"synthetic"}
+{"ts_ms":3000,"mint":"SYNTH_WIN","price_sol":0.00000112,"liquidity_sol":1,"creator_prior_launches":3,"creator_prior_success_rate":0.7,"progress":0.87,"sellable":true,"source":"synthetic"}
+{"ts_ms":3000,"mint":"SYNTH_FAILED_EXIT","price_sol":0.00000111,"liquidity_sol":1,"creator_prior_launches":4,"creator_prior_success_rate":0.6,"progress":0.88,"sellable":true,"source":"synthetic"}
+{"ts_ms":3000,"mint":"SYNTH_STOP_LOSS","price_sol":0.00000113,"liquidity_sol":1,"creator_prior_launches":0,"creator_prior_success_rate":0,"progress":0.72,"sellable":true,"source":"synthetic"}
+{"ts_ms":4000,"mint":"SYNTH_WIN","price_sol":0.00000150,"liquidity_sol":1,"creator_prior_launches":3,"creator_prior_success_rate":0.7,"progress":0.92,"sellable":true,"source":"synthetic"}
+{"ts_ms":4000,"mint":"SYNTH_FAILED_EXIT","price_sol":0.000000001,"liquidity_sol":0.00001,"creator_prior_launches":4,"creator_prior_success_rate":0.6,"progress":0.89,"sellable":false,"source":"synthetic","note":"Invented unsellability; a lower printed price does not guarantee a sale."}
+{"ts_ms":4000,"mint":"SYNTH_STOP_LOSS","price_sol":0.00000080,"liquidity_sol":1,"creator_prior_launches":0,"creator_prior_success_rate":0,"progress":0.70,"sellable":true,"source":"synthetic"}
+{"ts_ms":5000,"mint":"SYNTH_WIN","price_sol":0.00000160,"liquidity_sol":1,"creator_prior_launches":3,"creator_prior_success_rate":0.7,"progress":0.94,"sellable":true,"source":"synthetic"}
+{"ts_ms":5000,"mint":"SYNTH_FAILED_EXIT","price_sol":0.000000001,"liquidity_sol":0.00001,"creator_prior_launches":4,"creator_prior_success_rate":0.6,"progress":0.89,"sellable":false,"source":"synthetic"}
+{"ts_ms":5000,"mint":"SYNTH_STOP_LOSS","price_sol":0.00000065,"liquidity_sol":1,"creator_prior_launches":0,"creator_prior_success_rate":0,"progress":0.67,"sellable":true,"source":"synthetic"}
+{"ts_ms":6000,"mint":"SYNTH_STALE","price_sol":0.000001,"liquidity_sol":1,"creator_prior_launches":8,"creator_prior_success_rate":0.65,"progress":0.80,"sellable":true,"source":"synthetic"}
+{"ts_ms":7000,"mint":"SYNTH_STALE","price_sol":0.00000104,"liquidity_sol":1,"creator_prior_launches":8,"creator_prior_success_rate":0.65,"progress":0.82,"sellable":true,"source":"synthetic"}
+{"ts_ms":8000,"mint":"SYNTH_STALE","price_sol":0.00000110,"liquidity_sol":1,"creator_prior_launches":8,"creator_prior_success_rate":0.65,"progress":0.85,"sellable":true,"source":"synthetic"}
+{"ts_ms":9000,"mint":"SYNTH_STALE","price_sol":0.00000111,"liquidity_sol":1,"creator_prior_launches":8,"creator_prior_success_rate":0.65,"progress":0.87,"sellable":true,"source":"synthetic","note":"Last observation for this mint; later valuation becomes stale and zero."}
+{"ts_ms":16000,"mint":"SYNTH_FAILED_EXIT","price_sol":0.000000001,"liquidity_sol":0.00001,"creator_prior_launches":4,"creator_prior_success_rate":0.6,"progress":0.89,"sellable":false,"source":"synthetic"}
+{"ts_ms":16000,"mint":"SYNTH_CLOCK","price_sol":0.000001,"sellable":true,"source":"synthetic","note":"Advances the observation clock. No end-of-file liquidation is provided."}

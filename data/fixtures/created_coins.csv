@@ -1,0 +1,11 @@
+mint,name,ticker,market_cap_displayed,age_displayed
+SYNTH_TRADE_001,Synthetic created coin 01,SYNTH_TOKEN_001,$1000.00,1 fictional days
+SYNTH_TRADE_002,Synthetic created coin 02,SYNTH_REPEAT,$2000.00,2 fictional days
+SYNTH_TRADE_003,Synthetic created coin 03,SYNTH_TOKEN_003,$3000.00,3 fictional days
+SYNTH_TRADE_004,Synthetic created coin 04,SYNTH_<demo>,$4000.00,4 fictional days
+SYNTH_TRADE_005,Synthetic created coin 05,SYNTH_TOKEN_005,$5000.00,5 fictional days
+SYNTH_TRADE_006,Synthetic created coin 06,SYNTH_TOKEN_006,$6000.00,6 fictional days
+SYNTH_TRADE_007,Synthetic created coin 07,SYNTH_TOKEN_007,$7000.00,7 fictional days
+SYNTH_TRADE_008,Synthetic created coin 08,SYNTH_TOKEN_008,$8000.00,8 fictional days
+SYNTH_CREATED_009,Synthetic created coin 09,SYNTH_NEW_009,$9000.00,9 fictional days
+SYNTH_CREATED_010,Synthetic created coin 10,SYNTH_NEW_010,$10000.00,10 fictional days
