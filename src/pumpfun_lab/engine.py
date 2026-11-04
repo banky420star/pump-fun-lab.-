@@ -8,12 +8,18 @@ wallet, order-routing, chain state, curve pricing or RPC access is implemented.
 from collections import defaultdict, deque
 import math
 
+from .risk_screen import screen_token
+
 
 STRATEGIES = ("momentum", "creator_filter", "pre_graduation")
 
 DEFAULT_CONFIG = {
     "initial_balance_sol": 10.0,
     "position_sol": 0.05,
+    "position_fraction": 0.0,  # 0 keeps the legacy fixed paper budget
+    "enforce_holder_screen": False,
+    "top10_holder_limit": 0.25,
+    "developer_holder_limit": 0.05,
     "max_positions": 3,
     "protocol_fee_bps": 125.0,
     "slippage_bps": 100.0,
@@ -70,12 +76,15 @@ def _configuration(config):
         if result[key] == 10000:
             raise ValueError(f"{key} must be < 10000")
     result["stop_loss_bps"] = _number(result["stop_loss_bps"], "stop_loss_bps", maximum=10000)
-    for key in ("creator_min_success_rate", "pre_graduation_min_progress", "pre_graduation_max_progress"):
+    for key in ("creator_min_success_rate", "pre_graduation_min_progress", "pre_graduation_max_progress",
+                "position_fraction", "top10_holder_limit", "developer_holder_limit"):
         result[key] = _number(result[key], key, maximum=1)
     for key in ("max_positions", "max_quote_age_ms", "max_hold_ms"):
         result[key] = _integer(result[key], key, 1)
     for key in ("latency_ms", "creator_min_prior_launches"):
         result[key] = _integer(result[key], key)
+    if not isinstance(result["enforce_holder_screen"], bool):
+        raise ValueError("enforce_holder_screen must be boolean")
     if result["position_sol"] <= result["network_fee_sol"]:
         raise ValueError("position_sol must exceed network_fee_sol")
     if result["pre_graduation_min_progress"] > result["pre_graduation_max_progress"]:
@@ -108,7 +117,8 @@ def _observations(events):
             event["liquidity_sol"] = _number(event["liquidity_sol"], f"{label}.liquidity_sol", strict_minimum=True)
         if "creator_prior_launches" in event:
             _integer(event["creator_prior_launches"], f"{label}.creator_prior_launches")
-        for key in ("creator_prior_success_rate", "progress"):
+        for key in ("creator_prior_success_rate", "progress",
+                    "top10_holder_fraction", "developer_holder_fraction"):
             if key in event:
                 event[key] = _number(event[key], f"{label}.{key}", maximum=1)
         if "sellable" in event and not isinstance(event["sellable"], bool):
@@ -181,7 +191,7 @@ def run_replay(events: list[dict], config: dict, strategy: str) -> dict:
         net = _finite(gross * (1 - fee_rate) - network)
         return (net, "executable") if net > 0 else (0.0, "uneconomic")
 
-    def new_order(side, mint, now, index, reason):
+    def new_order(side, mint, now, index, reason, entry_budget=None):
         order = {
             "side": side, "mint": mint, "signal_ts_ms": now,
             "signal_event_index": index,
@@ -189,7 +199,7 @@ def run_replay(events: list[dict], config: dict, strategy: str) -> dict:
             "signal_reason": reason,
         }
         if side == "buy":
-            order["budget_sol"] = budget
+            order["budget_sol"] = budget if entry_budget is None else entry_budget
             order["expires_after_ts_ms"] = now + cfg["max_quote_age_ms"]
         else:
             order["position_id"] = positions[mint]["position_id"]
@@ -218,9 +228,10 @@ def run_replay(events: list[dict], config: dict, strategy: str) -> dict:
             if not event["sellable"]:
                 reason = "unsellable"
             elif side == "buy":
-                gross = (budget - network) / (1 + fee_rate)
+                order_budget = order["budget_sol"]
+                gross = (order_budget - network) / (1 + fee_rate)
                 quantity = _finite(gross / execution_price)
-                if cash + budget * 1e-12 < budget:
+                if cash + order_budget * 1e-12 < order_budget:
                     reason = "insufficient_balance"
                 elif len(positions) >= cfg["max_positions"]:
                     reason = "max_positions"
@@ -239,7 +250,7 @@ def run_replay(events: list[dict], config: dict, strategy: str) -> dict:
                     del orders[mint]
             else:
                 protocol_fee = gross * fee_rate
-                cashflow = -budget if side == "buy" else gross - protocol_fee - network
+                cashflow = -order_budget if side == "buy" else gross - protocol_fee - network
                 if side == "buy":
                     position_id = f"position-{next_position_id}"
                     next_position_id += 1
@@ -247,7 +258,7 @@ def run_replay(events: list[dict], config: dict, strategy: str) -> dict:
                         "position_id": position_id, "mint": mint,
                         "quantity_tokens": quantity, "opened_ts_ms": now,
                         "opened_event_index": index, "entry_price_sol": execution_price,
-                        "cash_invested_sol": budget,
+                        "cash_invested_sol": order_budget,
                     }
                 else:
                     position = positions.pop(mint)
@@ -261,7 +272,7 @@ def run_replay(events: list[dict], config: dict, strategy: str) -> dict:
                         "exit_reason": order["signal_reason"],
                     })
                 cash = _finite(cash + cashflow)
-                if -budget * 1e-12 < cash < 0:
+                if side == "buy" and -order_budget * 1e-12 < cash < 0:
                     cash = 0.0
                 fills.append({
                     "position_id": position_id, "side": side, "mint": mint,
@@ -318,16 +329,31 @@ def run_replay(events: list[dict], config: dict, strategy: str) -> dict:
                     cfg["pre_graduation_min_progress"] <= event.get("progress", -1) <= cfg["pre_graduation_max_progress"]
                 ):
                     reason = "progress_gate"
+                # Screening uses only current-event evidence available when the signal fired.
+                # Missing ownership values fail closed for the experimental configuration.
+                conservative_equity = _finite(cash + math.fsum(mark(p, now)[0] for p in positions.values()))
+                signal_budget = (_finite(conservative_equity * cfg["position_fraction"])
+                                 if cfg["position_fraction"] else budget)
+                if reason is None and cfg["enforce_holder_screen"]:
+                    screen = screen_token(
+                        event, conservative_equity,
+                        max_top10_fraction=str(cfg["top10_holder_limit"]),
+                        max_developer_fraction=str(cfg["developer_holder_limit"]),
+                    )
+                    if not screen.eligible:
+                        reason = ",".join(screen.reasons)
                 pending_buys = [o for o in orders.values() if o["side"] == "buy"]
                 available = cash - math.fsum(o["budget_sol"] for o in pending_buys)
-                if reason is None and len(positions) + len(pending_buys) >= cfg["max_positions"]:
+                if reason is None and signal_budget <= network:
+                    reason = "budget_below_network_fee"
+                elif reason is None and len(positions) + len(pending_buys) >= cfg["max_positions"]:
                     reason = "max_positions"
-                elif reason is None and available + budget * 1e-12 < budget:
+                elif reason is None and available + signal_budget * 1e-12 < signal_budget:
                     reason = "insufficient_balance"
                 if reason:
                     reject(index, now, mint, "buy", reason)
                 else:
-                    orders[mint] = new_order("buy", mint, now, index, strategy)
+                    orders[mint] = new_order("buy", mint, now, index, strategy, entry_budget=signal_budget)
 
         inventory = math.fsum(mark(position, now)[0] for position in positions.values())
         equity = _finite(cash + inventory)
@@ -361,7 +387,9 @@ def run_replay(events: list[dict], config: dict, strategy: str) -> dict:
             "Synthetic input, when selected, is artificial and proves no profitability.",
             "All price, liquidity, sellability and prior-creator-history fields are supplied observations, not independently verified.",
             "Protocol fee, slippage and network costs are configurable modeling assumptions, not verified live execution terms.",
-            "position_sol is an all-in entry budget; buy fee and network cost reduce purchased notional.",
+            "Position budgets use position_fraction of conservative decision-time paper equity when positive; otherwise position_sol is fixed.",
+            "Buy fee and network cost reduce purchased notional; a simulated stop is a trigger, not a guaranteed exit.",
+            "The optional holder screen rejects missing top-10 or developer-ownership fractions at signal time; provider ownership accuracy is not verified.",
             "Momentum requires 3 distinct-time observations, two positive moves and the configured cumulative return within max_quote_age_ms.",
             "Fills require a later event for that mint after latency; pending entry signals expire after max_quote_age_ms.",
             "Orders fill in full at observed price plus/minus fixed slippage; no depth, curve price impact, MEV or partial-fill model is provided.",
