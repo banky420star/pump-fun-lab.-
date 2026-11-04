@@ -161,7 +161,7 @@ def run_replay(events: list[dict], config: dict, strategy: str) -> dict:
     orders = {}
     latest = {}
     histories = defaultdict(lambda: deque(maxlen=3))
-    fills, trades, rejections = [], [], []
+    fills, trades, rejections, decisions = [], [], [], []
     next_position_id = 1
     peak = cash
     max_drawdown = 0.0
@@ -350,6 +350,15 @@ def run_replay(events: list[dict], config: dict, strategy: str) -> dict:
                     reason = "max_positions"
                 elif reason is None and available + signal_budget * 1e-12 < signal_budget:
                     reason = "insufficient_balance"
+                decisions.append({
+                    "event_index": index, "ts_ms": now, "mint": mint,
+                    "strategy": strategy, "screening_enabled": cfg["enforce_holder_screen"],
+                    "top10_holder_fraction": event.get("top10_holder_fraction"),
+                    "developer_holder_fraction": event.get("developer_holder_fraction"),
+                    "approved": reason is None, "reason": reason,
+                    "allocated_budget_sol": signal_budget if reason is None else 0.0,
+                    "source_label": cfg["source_label"],
+                })
                 if reason:
                     reject(index, now, mint, "buy", reason)
                 else:
@@ -420,6 +429,7 @@ def run_replay(events: list[dict], config: dict, strategy: str) -> dict:
             "modeled_slippage_sol": math.fsum(fill["modeled_slippage_sol"] for fill in fills),
         },
         "fills": fills, "trades": trades, "rejections": rejections,
+        "decision_journal": decisions,
         "open_positions": open_positions, "pending_orders": list(orders.values()),
         "equity_curve": equity_curve,
     }
