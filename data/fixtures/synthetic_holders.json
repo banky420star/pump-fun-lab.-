@@ -1,0 +1,263 @@
+{
+  "mint": "SYNTH_HOLDER_MINT_NOT_ON_CHAIN",
+  "source_label": "fictional holder snapshot for code tests, not chain data",
+  "observed_ts_ms": 1000,
+  "accounts_complete": true,
+  "developer_owners_verified": true,
+  "total_supply_raw": "100",
+  "developer_owners": [
+    "SYNTH_OWNER_01"
+  ],
+  "token_accounts": [
+    {
+      "token_account": "SYNTH_ACC_01",
+      "owner": "SYNTH_OWNER_01",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_02",
+      "owner": "SYNTH_OWNER_02",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_03",
+      "owner": "SYNTH_OWNER_03",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_04",
+      "owner": "SYNTH_OWNER_04",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_05",
+      "owner": "SYNTH_OWNER_05",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_06",
+      "owner": "SYNTH_OWNER_06",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_07",
+      "owner": "SYNTH_OWNER_07",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_08",
+      "owner": "SYNTH_OWNER_08",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_09",
+      "owner": "SYNTH_OWNER_09",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_10",
+      "owner": "SYNTH_OWNER_10",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_11",
+      "owner": "SYNTH_OWNER_11",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_12",
+      "owner": "SYNTH_OWNER_12",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_13",
+      "owner": "SYNTH_OWNER_13",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_14",
+      "owner": "SYNTH_OWNER_14",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_15",
+      "owner": "SYNTH_OWNER_15",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_16",
+      "owner": "SYNTH_OWNER_16",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_17",
+      "owner": "SYNTH_OWNER_17",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_18",
+      "owner": "SYNTH_OWNER_18",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_19",
+      "owner": "SYNTH_OWNER_19",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_20",
+      "owner": "SYNTH_OWNER_20",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_21",
+      "owner": "SYNTH_OWNER_21",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_22",
+      "owner": "SYNTH_OWNER_22",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_23",
+      "owner": "SYNTH_OWNER_23",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_24",
+      "owner": "SYNTH_OWNER_24",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_25",
+      "owner": "SYNTH_OWNER_25",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_26",
+      "owner": "SYNTH_OWNER_26",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_27",
+      "owner": "SYNTH_OWNER_27",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_28",
+      "owner": "SYNTH_OWNER_28",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_29",
+      "owner": "SYNTH_OWNER_29",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_30",
+      "owner": "SYNTH_OWNER_30",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_31",
+      "owner": "SYNTH_OWNER_31",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_32",
+      "owner": "SYNTH_OWNER_32",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_33",
+      "owner": "SYNTH_OWNER_33",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_34",
+      "owner": "SYNTH_OWNER_34",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_35",
+      "owner": "SYNTH_OWNER_35",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_36",
+      "owner": "SYNTH_OWNER_36",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_37",
+      "owner": "SYNTH_OWNER_37",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_38",
+      "owner": "SYNTH_OWNER_38",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_39",
+      "owner": "SYNTH_OWNER_39",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_40",
+      "owner": "SYNTH_OWNER_40",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_41",
+      "owner": "SYNTH_OWNER_41",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_42",
+      "owner": "SYNTH_OWNER_42",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_43",
+      "owner": "SYNTH_OWNER_43",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_44",
+      "owner": "SYNTH_OWNER_44",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_45",
+      "owner": "SYNTH_OWNER_45",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_46",
+      "owner": "SYNTH_OWNER_46",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_47",
+      "owner": "SYNTH_OWNER_47",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_48",
+      "owner": "SYNTH_OWNER_48",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_49",
+      "owner": "SYNTH_OWNER_49",
+      "amount_raw": "2"
+    },
+    {
+      "token_account": "SYNTH_ACC_50",
+      "owner": "SYNTH_OWNER_50",
+      "amount_raw": "2"
+    }
+  ]
+}

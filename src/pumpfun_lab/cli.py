@@ -74,6 +74,10 @@ def parser() -> argparse.ArgumentParser:
     command.add_argument("--config", type=Path, default=Path("config/paper.json"))
     command.add_argument("--strategy", choices=(*STRATEGIES, "all"), default="all")
     command.add_argument("--output", type=Path, default=Path("output/replay"))
+    command = sub.add_parser("screen", help="Screen a complete supplied holder snapshot; no RPC calls")
+    command.add_argument("--snapshot", type=Path, required=True)
+    command.add_argument("--equity-sol", default="10", help="Current virtual equity in SOL")
+    command.add_argument("--output", type=Path, default=Path("output/holder-screen"))
     command = sub.add_parser("wallet", help="Fetch a bounded read-only Solana history sample")
     command.add_argument("--address", required=True, help="Explicit public address to query; there is no saved default")
     command.add_argument("--max-signatures", type=int, default=100)
@@ -109,6 +113,22 @@ def main(argv=None) -> int:
             report = {"schema_version": 1, "mode": "paper", "snapshot": snapshot, "replays": results}
             markdown = snapshot_md + "\n\n---\n\n" + replay_markdown(results)
             title = "Pump.fun Lab — initial research report"
+        elif args.command == "screen":
+            from .holders import analyze_holder_snapshot
+            report = analyze_holder_snapshot(_load_json(args.snapshot), equity_sol=args.equity_sol)
+            decision = report["decision"]
+            markdown = "\n".join([
+                "# Read-only holder concentration screen", "",
+                f"Mint: {report['mint']}", f"Source: {report['source_label']}",
+                f"Observed timestamp (ms): {report['observed_ts_ms']}", "",
+                f"Top-10 fraction: {report['top10_holder_fraction']}",
+                f"Developer fraction: {report['developer_holder_fraction']}",
+                f"Paper candidate accepted: {decision['eligible']}",
+                f"Paper allocation: {decision['virtual_position_sol']} SOL",
+                f"Reasons: {', '.join(decision['reasons']) or 'none'}", "",
+                "Snapshot identities and completeness are unverified claims; no trade is submitted.", "",
+            ])
+            title = "Pump.fun Lab — holder concentration screen"
         elif args.command == "live":
             from .engine import _configuration
             from .live import capture_market

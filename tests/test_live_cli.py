@@ -88,7 +88,8 @@ class LiveCliTests(unittest.TestCase):
 
     def test_observed_prices_use_real_paper_engine_and_retain_cost_uncertainty(self):
         events = [{"ts_ms": n * 1000, "mint": "SYNTH_LIVE_TEST",
-                   "price_sol": price} for n, price in enumerate([1, 1.03, 1.10, 1.11, 1.50, 1.60])]
+                   "price_sol": price, "top10_holder_fraction": .2,
+                   "developer_holder_fraction": .02} for n, price in enumerate([1, 1.03, 1.10, 1.11, 1.50, 1.60])]
         capture = capture_fixture("trades", events)
         with tempfile.TemporaryDirectory() as directory:
             with patch("pumpfun_lab.live.capture_market", return_value=capture):
@@ -129,7 +130,8 @@ class LiveCliTests(unittest.TestCase):
 
     def test_replay_failure_preserves_the_actual_capture_and_never_reports_a_gain(self):
         events = [{"ts_ms": n * 1000, "mint": "SYNTH_LIVE_TEST",
-                   "price_sol": price} for n, price in enumerate([1, 1.03, 1.1, 1e-320])]
+                   "price_sol": price, "top10_holder_fraction": .2,
+                   "developer_holder_fraction": .02} for n, price in enumerate([1, 1.03, 1.1, 1e-320])]
         observed = capture_fixture("trades", events)
         with tempfile.TemporaryDirectory() as directory:
             with patch("pumpfun_lab.live.capture_market", return_value=observed):

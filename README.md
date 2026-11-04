@@ -29,6 +29,8 @@ The demo combines a fabricated profile with 50 artificial per-coin summaries and
 | Paper replay | Compare momentum, creator filtering and pre-graduation entries under common costs and delays | A price-observation model cannot establish executable live returns |
 | Read-only wallet importer | Preserve raw RPC evidence, native/token changes, fees, unknown ownership and incomplete history | At most 100 signatures and 20 transactions; no automatic trade or PnL inference |
 | Live market sample | Bounded creation/migration capture; explicitly authorized metered trade observations with paper replay | Third-party processed data and indicative prices; no funded execution or proven returns |
+| Read-only holder snapshot screen | Aggregate raw token-account balances by declared owner; reject incomplete supply; calculate top-ten and developer shares | Completeness and beneficial ownership are supplied assertions, not on-chain verified |
+| Experimental entry screening | Fail-closed signal-time concentration checks, 2% dynamic paper allocation and a structured decision journal | Missing ownership evidence blocks entries; live collector does not supply it |
 | Automated checks | Exercise causality, accounting, missing data, validation and escaping | Engineering tests do not establish a trading edge |
 
 ## Paper strategies
@@ -56,17 +58,31 @@ Input is one JSON object per line in nondecreasing timestamp order:
 {"ts_ms":1000,"mint":"SYNTH_EXAMPLE","price_sol":0.000001,"liquidity_sol":5,"sellable":true,"creator_prior_launches":4,"creator_prior_success_rate":0.5,"progress":0.85}
 ```
 
-Required fields: integer `ts_ms`, nonempty `mint`, finite positive `price_sol`. Optional features must describe information known at that moment. Events are validated, not silently reordered.
+Required fields: integer `ts_ms`, nonempty `mint`, finite positive `price_sol`. With the default experimental configuration, **both** `top10_holder_fraction` and `developer_holder_fraction` must also be present on the signal event as numeric values between 0 and 1; missing evidence rejects the paper entry. Optional features must describe information known at that moment. Events are validated, not silently reordered.
 
 ### Execution assumptions
 
-Defaults in `config/paper.json`: 10 SOL virtual cash; 0.05 SOL all-in buys; at most three positions; 1,000 ms delay; 5,000 ms quote/signal age; 125 basis points assumed protocol fee per side; 100 basis points adverse slippage; 0.00001 SOL assumed network cost per filled side; 15% stop-loss, 25% take-profit and 60-second holding-time triggers.
+Defaults in `config/paper.json`: 10 SOL virtual cash; **2% of conservative virtual equity per buy** (initially 0.20 SOL), calculated at signal time; at most three positions; 1,000 ms delay; 5,000 ms quote/signal age; 125 basis points assumed protocol fee per side; 100 basis points adverse slippage; 0.00001 SOL assumed network cost per filled side; **35% stop-loss trigger**, 25% take-profit and 60-second holding-time triggers. The fixed `position_sol` fallback remains available when `position_fraction` is set to zero.
 
 These are modeling settings, not verified live costs. Fees vary by venue, asset, tier and provider. Priority fees, tips, rent, transfer fees and failed transactions need calibration. The model does not reproduce exact reserves, MEV, partial fills, depth depletion or infrastructure outages.
 
 A signal fills only on a later event for the same mint after the delay. Pending buys reserve cash and capacity. A stop or timeout creates an exit attempt, not a guaranteed sale. Stale, unsellable, insufficiently liquid or uneconomic holdings receive zero conservative marks. End-of-file never invents liquidation. Closed-trade PnL, cash movement and conservative portfolio PnL are separate.
 
-Supplied liquidity caps each fill/valuation independently; shared liquidity is not depleted. Missing liquidity imposes no cap, and missing sellability defaults to true. Those assumptions do not prove execution. Rejected simulated attempts incur no modeled network fees.
+Supplied liquidity caps each fill/valuation independently; shared liquidity is not depleted. Missing liquidity imposes no cap, and missing sellability defaults to true. Those assumptions do not prove execution. Rejected simulated attempts incur no modeled network fees. Holder concentration is evaluated at the momentum signal time, not independently rechecked at fill; snapshots must be sufficiently current for the intended experiment.
+
+## Screen a read-only holder snapshot
+
+A complete external snapshot can be screened locally, without RPC calls, using exact raw-unit sums and declared owner identities:
+
+```bash
+PYTHONPATH=src python3 -m pumpfun_lab screen \\
+  --snapshot data/fixtures/synthetic_holders.json \\
+  --equity-sol 10 --output output/holder-screen
+```
+
+The included file is **fictional**. Real input must declare `mint`, `source_label`, `observed_ts_ms`, `total_supply_raw`, `accounts_complete: true`, `developer_owners_verified: true`, `developer_owners` and an exhaustive `token_accounts` array. Accounts have `token_account`, `owner` and `amount_raw` fields. Balances must sum exactly to the declared supply. No vault addresses or burned balances are excluded automatically. A successful screen is **not** independent verification of developer control or executable liquidity. See `docs/paper-risk-screening-v2.md`.
+
+Each replay returns a `decision_journal` with the decision-time screening fields, rejection reasons, virtual budget and provenance. The separate `rejections` list captures failed actions.
 
 ## Analyze private data locally
 
